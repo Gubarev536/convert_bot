@@ -3,28 +3,28 @@ import json
 from config import keys, API_KEY
 
 
-class ConvertionExeption(Exception):
+class APIException(Exception):
     pass
 
 class CryptoConverter():
     @staticmethod
-    def convert(quote: str, base: str, amount: str):
+    def get_price(quote: str, base: str, amount: str):
        
         if quote == base:
-            raise ConvertionExeption(f'Невозможно перевести одинаковые валюты {base}')
+            raise APIException(f'Невозможно перевести одинаковые валюты {base}')
 
         try:
             quote_ticker = keys[quote]
         except KeyError:
-            raise ConvertionExeption(f'Не удалось обработать валюту {quote}')
+            raise APIException(f'Не удалось обработать валюту {quote}')
         try:
             base_ticker = keys[base]
         except KeyError:
-            raise ConvertionExeption(f'Не удалось обработать валюту {base}')
+            raise APIException(f'Не удалось обработать валюту {base}')
         try:
             amount = float(amount)
         except ValueError:
-            raise ConvertionExeption(f'Не удалось обработать количество {amount}')
+            raise APIException(f'Не удалось обработать количество {amount}')
 
         r = requests.get(f'http://api.exchangeratesapi.io/v1/latest'
             f'?access_key={API_KEY}'
